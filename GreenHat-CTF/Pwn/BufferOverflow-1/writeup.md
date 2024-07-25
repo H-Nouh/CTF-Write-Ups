@@ -11,7 +11,7 @@
 
 ## Solution:
 
-1.  **Initial Approach**
+1.  **Initial Approach** <br>
     -We'll first check our source code using **cat** command: <br>
     ![image](https://github.com/user-attachments/assets/16d55e29-690a-41d7-813f-129c0e84b213) <br>
     -We can notice 3 main functions:
