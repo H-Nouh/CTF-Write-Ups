@@ -53,15 +53,15 @@ Let's analyse the actual contents of our stack:
 -Now moving to our main focus: the variables! First, I'll explain more the size of each case and all. Here we need the information of whether our file is x32 or x64 bits. For more context to those who don't know, x32 bits represents the size of one case in our memory. The smallest size unit in memory is Byte, which is equivalent to 8 Bits, and thus 32/8 equals 4 Bytes, and that's actually the size of one case in our memory.  
 -Both our "a" & "b" variables have just 1 case, since the size of an integer is 4 bytes by default. For "buf", it's length is 64 and each character is 1 byte by default, so 64/4 = 16 which is the number of the cases we have. We have filled it with 65 bytes, so the last one "q" was inserted into "b" which was next in stack.  
 -If you are curious about the order of the variables, well stacks follow "LIFO" method when inserting elements, which means Last In First Out, so the last element that was inserted is the first to be removed. In our case "buf" was the first one so that's why it's in the bottom of the stack (remember that's it's technically flipped upside down), then after comes "a" then "b". However, in our case "b" came before "a" so why's that? <br>
-### IMPORTANT: 
+### -----IMPORTANT: 
 -When programs are compiled, some optimizations can be done including the memory layout, so the order in which the variables are placed in the stack won't necessarily be the same in which they were declared. This is one of the main benefits of debugging our binary: observing exactly how our program is behaving.  
+### --------------------
 -I hope you can assume what we gotta do next...Yes exactly, simply fill "buf" with 64 random characters which we call **padding**, then insert the required values of "b" & "a". You just gotta be careful, since they asked for hex values: "13371337" & "deadbeef" (you can notice that by the 0x at the beginning which means hexadecimal), and since our input will be converted to hex automatically (string to int), so we have to go the other way around, and give a string that when converted will result in 0x13371337 & 0xdeadbeef. (literally get their ascii values) <br> 
--To do that we will simply use an online tool to convert the value from hex to text, but the more we advance in challenges, the more we'll need to automate things and use scripts  
-/*-The command we'll use is: python3 -c "print(b'A' * 64 + b'\xde\xad\xbe\xef\x13\x37\x13\x37')" > payload
+-The command we'll use is: python3 -c "print(b'A' * 64 + b'\xde\xad\xbe\xef\x13\x37\x13\x37')" > payload
 -The flag "-c" is used to execute the code directly in our terminal without making a python script. We added "b" before our padding and values just for python to treat them as byte strings, cause otherwise it would cause us some errors.
 -">" is used to direct the output into our payload file.
 python3 -c "print('A' * 64 + '\xde\xad\xbe\xef\x13\x37\x13\x37')"
-python3 -c "print('A' * 64 + '\xad\xde\xef\xbe\x37\x13\x37\x13')"*/
+python3 -c "print('A' * 64 + '\xad\xde\xef\xbe\x37\x13\x37\x13')"
 ![image](https://github.com/user-attachments/assets/245616e8-470d-4c00-af39-3d2338e5241a)
 ![image](https://github.com/user-attachments/assets/08899c9c-7483-4967-b314-cd27146dc34f)  
 -Woah, it's not working...But worry not, gdb is always here to clear our confusions!
