@@ -24,9 +24,9 @@
     -We have to be aware that **gets** function is vulnerable, since it takes our input without any length restrictions, allowing us to exceed "buf"'s limit. <br>
     -The second question that we should ask is: what will we happen to the characters inserted in our variable that exceed the limit? And that's what we'll discover pretty soon! <br>
     
-    -Our time with the source code is over, now we have to turn to our executable file. First of all, we'll use file command on it to verify whether it is **x32 or x64 bits**, which is really important: <br> <br>
+    -Our time with the source code is over, now we have to turn to our executable file. First of all, we'll use file command on it to verify whether it is **x32 or x64 bits** and whether it is **Little or Big Endian**, which is really important: <br> <br>
     ![image](https://github.com/user-attachments/assets/4a18c874-0b36-417d-b4c8-7371f0b5e838) <br> <br>
-    -We can see that it is x32 bits, which makes things easier (the process would be different with x64 bits, you can check BufferOverflow-3 for more details). <br>
+    -We can see that it is x32 bits, which makes things easier (the process would be different with x64 bits, you can check BufferOverflow-3 for more details). Also, the "LSB" (Least Significant Byte) indicates that it's little endian, if it was big endian it would be "MSB" (Most Significant Byte) [You can check here for more details about the endianees](#common-mistakes) <br>
  
  2.  **Detailed Solution** <br>
     -First, we need to prepare the string that we will give as an input to the program, which we call: **"Payload"**. We'll first generate a random string of 65 characters (1 more than the size of buf) using **cyclic**, and then analyze it using **gdb** <br> <br>
@@ -57,22 +57,35 @@ Let's analyse the actual contents of our stack:
 -When programs are compiled, some optimizations can be done including the memory layout, so the order in which the variables are placed in the stack won't necessarily be the same in which they were declared. This is one of the main benefits of debugging our binary: observing exactly how our program is behaving.  
 ### --------------------
 -I hope you can assume what we gotta do next...Yes exactly, simply fill "buf" with 64 random characters which we call **padding**, then insert the required values of "b" & "a". You just gotta be careful, since they asked for hex values: "13371337" & "deadbeef" (you can notice that by the 0x at the beginning which means hexadecimal), and since our input will be converted to hex automatically (string to int), so we have to go the other way around, and give a string that when converted will result in 0x13371337 & 0xdeadbeef. (literally get their ascii values) <br> 
--The command we'll use is: python3 -c "print(b'A' * 64 + b'\xde\xad\xbe\xef\x13\x37\x13\x37')" > payload
--The flag "-c" is used to execute the code directly in our terminal without making a python script. We added "b" before our padding and values just for python to treat them as byte strings, cause otherwise it would cause us some errors.
--">" is used to direct the output into our payload file.
-python3 -c "print('A' * 64 + '\xde\xad\xbe\xef\x13\x37\x13\x37')"
-python3 -c "print('A' * 64 + '\xad\xde\xef\xbe\x37\x13\x37\x13')"
-![image](https://github.com/user-attachments/assets/245616e8-470d-4c00-af39-3d2338e5241a)
-![image](https://github.com/user-attachments/assets/08899c9c-7483-4967-b314-cd27146dc34f)  
--Woah, it's not working...But worry not, gdb is always here to clear our confusions!
+-The command we'll use is: **python2 -c "print('A' * 64 + '\xef\xbe\xad\xde' + '\x37\x13\x37\x13')" > payload**    
+-The flag "-c" is used to execute the code directly in our terminal without having to create a python script file.  
+-">" is used to direct the output into our payload file.  
+-Since an int is 4 bytes, so we have to divide our input 0xdeadbeef into 4: 'de' 'ad' 'be' 'ef', and as I mentioned earlier it's a hexa value, so we need a string that would be equivalent to that value when converted from str to int, and that's why we use "\x": it converts the next 2 characters into 1 byte (2 hex values).  
+-Now all what is left is running our binary with the crafted payload as input, using the input redirection "<":  <br>
+![image](https://github.com/user-attachments/assets/aec228f6-b1d5-42d0-8cbf-524e22c87bd9)
+# Congrats on your first BufferOverflow!
+## Common mistakes: 
+-Not respecting the endianees and writing **'\xde\xad\xbe\xef' + '\x13\x37\x13\x37'**: There are 2 types of endianees: Big & Little endian. For the big endian, the data is stored like it is in memory (deadbeef), while for the little endian it's in the opposite order byte (2 hex values) per byte (efbeadde). Most systems now use Little Endian, since it can be more optimal in several cases, but we still should confirm and check what we're working on using "file" command like we did in the beginning.  
+-Writing '\efbeadde' or directly 'efbeadde': As I mentioned earlier, our input is str and we want to overwrite an int, and since it's mentioned (0xdeadbeef), we technically want to input a string that when it's converted to hex it results in deadbeef. If we simply send deadbeef, that'll simply be: "6465616462656566". Also when we use \xefbeadde, only the first 2 charas will be affected since the hex escape sequence "\x" needs exactly 2 characters after it to convert them.  
+-Writing '\xef\xbe\xad\xde\x37\x13\x37\x13'instead of separating them: It won't necessarily cause issues all the times, like in this example it works all fine, but it's better to avoid it since it can cause issues when we have to explicitly separate them.  
+## IMPORTANT NOTE: 
+-I used python2 cause it's simpler, if you would use the same command on python3 it would generate a wrong payload and that's mainly because the print function in python3 automatically generates a new line at the end of our printed string. It also encodes the result and treats strings as unicode, so we have to add b"" before every part to ensure that it's turned into bytes, but the newline problem would still be there. What we can do instead if we still want to use python3 we can use a function that writes raw bytes directly to output (without having a newline at the end) we just have to add b"" in this case as well since we are dealing with bytes and not string, and our command would be:  <br>
+**python3 -c 'import sys; sys.stdout.buffer.write(b"A" * 64 + b"\xef\xbe\xad\xde" + b"\x37\x13\x37\x13")' > payload**  <br>
+## Pwntools Script: 
+-The more we advance in challenges, the more complex they get, and thus the more necessary it'll be to automate things. Luckily, there's a really powerful python library named "Pwntools", which literally can do wonders (cyclic is part of it btw). I'll show you a simple script to solve this challenge using pwntools, and explain it in details:  
+```python
+from pwn import *
+p = process("./chall")
 
+payload = b"A" * 64 + p32(0xdeadbeef) + p32(0x13371337)
 
- 
-
-
-        
-        
-## Flag:
-`microCTF{}`
-
-## Additional Resources:
+p.sendline(payload)
+p.interactive()
+```
+-First, we have to import our library "pwn". Afterwards, we have to create our process "p". Since we are working locally I used p = process(./name-of-your-binary), but when we want to work on a remote server we should instead use: p = remote ("Host", Port), to create a connection.  
+-For the payload, since we're working with python3, we should have elements of the same type when concatinating, that's why we added b"" to the "A"s. For "a" & "b" values, as you can see instead of all the previous work of respecting endianees and using "\x" which can be super tedious with longer payloads especially in x64, we simply can use p32 (p64 for x64 bits), and just write the value we want in hexa, **and that's the power & beauty of pwntools!**  
+-After crafting our payload, we should send it using sendline() function. This would print the flag automatically if it worked, but the remote connection will close directly afterwards without even being able to see the result, and that's why we used the interactive() function, which keeps the connection alive and gives us the hand to interract with it.  <br>
+# Additional Resources:
+### [Pwndbg cheatsheet:](https://drive.google.com/file/d/16t9MV8KTFXK7oX_CzXhmDdaVnjT8IYM4/view?pli=1)
+### [Pwntools documentation:](https://docs.pwntools.com/en/stable/intro.html)
+### [Amazing Bof explanation video (you can check the playlist for more vulnerabilities):](https://www.youtube.com/watch?v=wa3sMSdLyHw&list=PLHUKi1UlEgOIc07Rfk2Jgb5fZbxDPec94)
