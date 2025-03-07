@@ -2,7 +2,8 @@
 
 ## Challenge Details:
 -Description: "I can tell you're still a buffer overflow novice. Can you prove me wrong?" <br>
--Files: [Binary Executable](chall), [Source Code](chall.c), [Flag](flag.txt). <br>
+-Files: [Binary Executable](chall), [Source Code](chall.c), [Flag](flag.txt), [Solver](solver.py). <br>
+-Author: Younesfdj. <br>
 
 ## Tools:
 -Gnu Debugger (gdb): Used to analyze programs and their behavior to better understand them. <br>
@@ -11,8 +12,8 @@
 
 ## Solution:
 
-1.  **Initial Approach** <br>
-    -We'll first check our source code using **cat** command: <br>
+### **Initial Approach:** <br>
+We'll first check our source code using **cat** command: <br>
     ![image](https://github.com/user-attachments/assets/16d55e29-690a-41d7-813f-129c0e84b213) <br> <br>
     We can notice 3 main functions:<br>  
         -**Flag:** It opens a .txt file that contains the flag, and then prints it. <br>
@@ -20,16 +21,16 @@
         -**Vuln:** This is our main interest! We can notice 3 variables, "a" & "b" integers both initialized with 0, and we can't really change their values, and the third is a string "buf", which we can change its 
          value through an input using **gets** function. We have 2 conditions regarding the values of "a" & "b", and if we succeed to meet them, our **flag** function will run. <br>
          
-    -The first question that comes to mind is: how can we change the values of our variables to match the condition? <br>
-    -We have to be aware that **gets** function is vulnerable, since it takes our input without any length restrictions, allowing us to exceed "buf"'s limit. <br>
-    -The second question that we should ask is: what will we happen to the characters inserted in our variable that exceed the limit? And that's what we'll discover pretty soon! <br>
+-The first question that comes to mind is: how can we change the values of our variables to match the condition? <br>
+-We have to be aware that **gets** function is vulnerable, since it takes our input without any length restrictions, allowing us to exceed "buf"'s limit. <br>
+-The second question that we should ask is: what will we happen to the characters inserted in our variable that exceed the limit? And that's what we'll discover pretty soon! <br>
     
-    -Our time with the source code is over, now we have to turn to our executable file. First of all, we'll use file command on it to verify whether it is **x32 or x64 bits** and whether it is **Little or Big Endian**, which is really important: <br> <br>
+-Our time with the source code is over, now we have to turn to our executable file. First of all, we'll use file command on it to verify whether it is **x32 or x64 bits** and whether it is **Little or Big Endian**, which is really important: <br> <br>
     ![image](https://github.com/user-attachments/assets/4a18c874-0b36-417d-b4c8-7371f0b5e838) <br> <br>
-    -We can see that it is x32 bits, which makes things easier (the process would be different with x64 bits, you can check BufferOverflow-3 for more details). Also, the "LSB" (Least Significant Byte) indicates that it's little endian, if it was big endian it would be "MSB" (Most Significant Byte) [You can check here for more details about the endianees](#common-mistakes) <br>
+-We can see that it is x32 bits, which makes things easier (the process would be different with x64 bits, you can check BufferOverflow-3 for more details). Also, the "LSB" (Least Significant Byte) indicates that it's little endian, if it was big endian it would be "MSB" (Most Significant Byte) [You can check here for more details about the endianees](#common-mistakes) <br>
  
- 2.  **Detailed Solution** <br>
-    -First, we need to prepare the string that we will give as an input to the program, which we call: **"Payload"**. We'll first generate a random string of 65 characters (1 more than the size of buf) using **cyclic**, and then analyze it using **gdb** <br> <br>
+ ### **Detailed Solution** <br>
+-First, we need to prepare the string that we will give as an input to the program, which we call: **"Payload"**. We'll first generate a random string of 65 characters (1 more than the size of buf) using **cyclic**, and then analyze it using **gdb** <br> <br>
     ![image](https://github.com/user-attachments/assets/81397dca-3e1e-425b-89c0-62b11bfdc2a5) <br><br>
     Before we get going, here are some commands of gdb that we'll use, and their functionalities: <br>
         **Disass (function_name)**: It will turn our specified function from an executable code into a readable Assembly code. <br> 
