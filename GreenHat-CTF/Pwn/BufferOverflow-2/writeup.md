@@ -3,7 +3,7 @@
 ## Challenge Details:
 **-Author:** "Younesfdj". <br>
 **-Description:** "Are you ready to master the art of buffer overflow??" <br>
-**-Files:** [Binary Executable](chall), [Source Code](chall.c), [Flag](flag.txt), [Solver](script.py). <br>
+**-Files:** [Binary Executable](https://github.com/H-Nouh/CTF-Write-Ups/blob/25fa4b10d45823aa40fe06c15eb97b65db9444f7/GreenHat-CTF/Pwn/BufferOverflow-2/chall), [Source Code](https://github.com/H-Nouh/CTF-Write-Ups/blob/25fa4b10d45823aa40fe06c15eb97b65db9444f7/GreenHat-CTF/Pwn/BufferOverflow-2/chall.c), [Flag](https://github.com/H-Nouh/CTF-Write-Ups/blob/25fa4b10d45823aa40fe06c15eb97b65db9444f7/GreenHat-CTF/Pwn/BufferOverflow-2/flag.txt), [Solver](https://github.com/H-Nouh/CTF-Write-Ups/blob/25fa4b10d45823aa40fe06c15eb97b65db9444f7/GreenHat-CTF/Pwn/BufferOverflow-2/script.py). <br>
 
 ## Solution:
 
