@@ -2,7 +2,7 @@
 
 ## Challenge Details:
 -Description: "I can tell you're still a buffer overflow novice. Can you prove me wrong?" <br>
--Files: [Binary Executable](chall), [Source Code](chall.c), [Flag](flag.txt), [Solver](solver.py). <br>
+-Files: [Binary Executable](https://github.com/H-Nouh/CTF-Write-Ups/blob/645d49ee8aed1a3e834cb84992fbb43e67f994de/GreenHat-CTF/Pwn/BufferOverflow-1/chall), [Source Code](https://github.com/H-Nouh/CTF-Write-Ups/blob/645d49ee8aed1a3e834cb84992fbb43e67f994de/GreenHat-CTF/Pwn/BufferOverflow-1/chall.c), [Flag](https://github.com/H-Nouh/CTF-Write-Ups/blob/645d49ee8aed1a3e834cb84992fbb43e67f994de/GreenHat-CTF/Pwn/BufferOverflow-1/flag.txt), [Solver](https://github.com/H-Nouh/CTF-Write-Ups/blob/645d49ee8aed1a3e834cb84992fbb43e67f994de/GreenHat-CTF/Pwn/BufferOverflow-1/solver.py). <br>
 -Author: Younesfdj. <br>
 
 ## Tools:
@@ -87,6 +87,6 @@ p.interactive()
 -For the payload, since we're working with python3, we should have elements of the same type when concatinating, that's why we added b"" to the "A"s. For "a" & "b" values, as you can see instead of all the previous work of respecting endianees and using "\x" which can be super tedious with longer payloads especially in x64, we simply can use p32 (p64 for x64 bits), and just write the value we want in hexa, **and that's the power & beauty of pwntools!**  
 -After crafting our payload, we should send it using sendline() function. This would print the flag automatically if it worked, but the remote connection will close directly afterwards without even being able to see the result, and that's why we used the interactive() function, which keeps the connection alive and gives us the hand to interract with it.  <br>
 # Additional Resources:
-### [Pwndbg cheatsheet:](https://drive.google.com/file/d/16t9MV8KTFXK7oX_CzXhmDdaVnjT8IYM4/view?pli=1)
-### [Pwntools documentation:](https://docs.pwntools.com/en/stable/intro.html)
-### [Amazing Bof explanation video (you can check the playlist for more vulnerabilities):](https://www.youtube.com/watch?v=wa3sMSdLyHw&list=PLHUKi1UlEgOIc07Rfk2Jgb5fZbxDPec94)
+### [Pwndbg cheatsheet.](https://drive.google.com/file/d/16t9MV8KTFXK7oX_CzXhmDdaVnjT8IYM4/view?pli=1)
+### [Pwntools documentation.](https://docs.pwntools.com/en/stable/intro.html)
+### [Amazing Bof explanation video (you can check the playlist for more vulnerabilities).](https://www.youtube.com/watch?v=wa3sMSdLyHw&list=PLHUKi1UlEgOIc07Rfk2Jgb5fZbxDPec94)
