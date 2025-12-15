@@ -3,7 +3,7 @@
 ## Challenge Details
 **-Author:** "BigGamer9000". <br>
 **-Description:** "Last Dance". <br>
-**-Files:** [Executable](BufferOverflow-3/chall), [Source Code](BufferOverflow-3/chall.c), [Flag](BufferOverflow-3/flag.txt), [Solver](BufferOverflow-3/bof3.py). <br>
+**-Files:** [Executable](https://github.com/H-Nouh/CTF-Write-Ups/blob/8482b88f6d0398125a08a570df174abd8c2a58d9/GreenHat-CTF/Pwn/BufferOverflow-3/chall), [Source Code](https://github.com/H-Nouh/CTF-Write-Ups/blob/8482b88f6d0398125a08a570df174abd8c2a58d9/GreenHat-CTF/Pwn/BufferOverflow-3/chall.c), [Flag](https://github.com/H-Nouh/CTF-Write-Ups/blob/8482b88f6d0398125a08a570df174abd8c2a58d9/GreenHat-CTF/Pwn/BufferOverflow-3/flag.txt), [Solver](https://github.com/H-Nouh/CTF-Write-Ups/blob/8482b88f6d0398125a08a570df174abd8c2a58d9/GreenHat-CTF/Pwn/BufferOverflow-3/bof3.py). <br>
 
 ## Solution
 
